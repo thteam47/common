@@ -7,8 +7,12 @@ import (
 	"github.com/go-redis/cache/v8"
 	"github.com/go-redis/redis/v8"
 	"github.com/pkg/errors"
-	"github.com/thteam47/common/grpcclient"
 	"github.com/thteam47/common/entity"
+	"github.com/thteam47/common/grpcclient"
+	jwtrepo "github.com/thteam47/common/handler/jwt"
+	jwtImpl "github.com/thteam47/common/handler/jwt/default"
+	mongorepo "github.com/thteam47/common/handler/mongo"
+	mongoImpl "github.com/thteam47/common/handler/mongo/default"
 	redisrepo "github.com/thteam47/common/handler/redis"
 	redisImpl "github.com/thteam47/common/handler/redis/default"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -16,11 +20,10 @@ import (
 )
 
 type Handler struct {
-	MongoDB         *mongo.Collection
+	MongoRepository mongorepo.MongoRepository
 	RedisRepository redisrepo.RedisRepository
 	GrpcConnConfig  grpcclient.GrpcClientConnConfig
-	JwtKey          string
-	Exp             time.Duration
+	JwtReposotpry   jwtrepo.JwtRepository
 	TotpSecret      string
 	TimeRequestId   time.Duration
 	TimeEmailOtp    time.Duration
@@ -36,12 +39,13 @@ func NewHandlerWithConfig(config *entity.Config) (*Handler, error) {
 		return nil, errors.WithMessage(err, "connectRedis")
 	}
 	redisRepo := redisImpl.NewRedisRepo(redisCache, config.TimeoutRedis)
+	mongoRepo := mongoImpl.NewMongoRepo(mongodb, config.TimeoutRedis)
+	jwtRepo := jwtImpl.NewJwtRepo(config.KeyJwt)
 	return &Handler{
-		MongoDB:         mongodb,
+		MongoRepository: mongoRepo,
 		RedisRepository: redisRepo,
-		JwtKey:          config.KeyJwt,
+		JwtReposotpry:   jwtRepo,
 		GrpcConnConfig:  config.GrpcClientConn,
-		Exp:             config.Exp,
 		TotpSecret:      config.TotpSecret,
 		TimeRequestId:   config.TimeRequestId,
 		TimeEmailOtp:    config.TimeEmailOtp,

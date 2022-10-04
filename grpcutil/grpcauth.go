@@ -89,7 +89,7 @@ func (interceptor *AuthInterceptor) VerifyToken(accessToken string) (*entity.Cla
 			if !ok {
 				return nil, fmt.Errorf("unexpected token signing method")
 			}
-			return []byte(interceptor.handler.JwtKey), nil
+			return []byte(interceptor.handler.JwtReposotpry.KeyJwt()), nil
 		},
 	)
 

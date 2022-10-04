@@ -23,7 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SurveyServiceClient interface {
 	CreateSurvey(ctx context.Context, in *SurveyRequest, opts ...grpc.CallOption) (*Survey, error)
-	UpdateSurvey(ctx context.Context, in *SurveyRequest, opts ...grpc.CallOption) (*Survey, error)
+	UpdateSurvey(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*Survey, error)
 	GetSurveyById(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*Survey, error)
 	GetSurveyByUserJoin(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
@@ -46,7 +46,7 @@ func (c *surveyServiceClient) CreateSurvey(ctx context.Context, in *SurveyReques
 	return out, nil
 }
 
-func (c *surveyServiceClient) UpdateSurvey(ctx context.Context, in *SurveyRequest, opts ...grpc.CallOption) (*Survey, error) {
+func (c *surveyServiceClient) UpdateSurvey(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*Survey, error) {
 	out := new(Survey)
 	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/UpdateSurvey", in, out, opts...)
 	if err != nil {
@@ -87,7 +87,7 @@ func (c *surveyServiceClient) GetSurveyByUserCreate(ctx context.Context, in *Str
 // for forward compatibility
 type SurveyServiceServer interface {
 	CreateSurvey(context.Context, *SurveyRequest) (*Survey, error)
-	UpdateSurvey(context.Context, *SurveyRequest) (*Survey, error)
+	UpdateSurvey(context.Context, *UpdateSurveyRequest) (*Survey, error)
 	GetSurveyById(context.Context, *StringRequest) (*Survey, error)
 	GetSurveyByUserJoin(context.Context, *StringRequest) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(context.Context, *StringRequest) (*ListSurveyResponse, error)
@@ -101,7 +101,7 @@ type UnimplementedSurveyServiceServer struct {
 func (UnimplementedSurveyServiceServer) CreateSurvey(context.Context, *SurveyRequest) (*Survey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSurvey not implemented")
 }
-func (UnimplementedSurveyServiceServer) UpdateSurvey(context.Context, *SurveyRequest) (*Survey, error) {
+func (UnimplementedSurveyServiceServer) UpdateSurvey(context.Context, *UpdateSurveyRequest) (*Survey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSurvey not implemented")
 }
 func (UnimplementedSurveyServiceServer) GetSurveyById(context.Context, *StringRequest) (*Survey, error) {
@@ -145,7 +145,7 @@ func _SurveyService_CreateSurvey_Handler(srv interface{}, ctx context.Context, d
 }
 
 func _SurveyService_UpdateSurvey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SurveyRequest)
+	in := new(UpdateSurveyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func _SurveyService_UpdateSurvey_Handler(srv interface{}, ctx context.Context, d
 		FullMethod: "/survey_api.SurveyService/UpdateSurvey",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SurveyServiceServer).UpdateSurvey(ctx, req.(*SurveyRequest))
+		return srv.(SurveyServiceServer).UpdateSurvey(ctx, req.(*UpdateSurveyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }

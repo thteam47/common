@@ -66,7 +66,7 @@ func local_request_SurveyService_CreateSurvey_0(ctx context.Context, marshaler r
 }
 
 func request_SurveyService_UpdateSurvey_0(ctx context.Context, marshaler runtime.Marshaler, client SurveyServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq SurveyRequest
+	var protoReq UpdateSurveyRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
@@ -83,7 +83,7 @@ func request_SurveyService_UpdateSurvey_0(ctx context.Context, marshaler runtime
 }
 
 func local_request_SurveyService_UpdateSurvey_0(ctx context.Context, marshaler runtime.Marshaler, server SurveyServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var protoReq SurveyRequest
+	var protoReq UpdateSurveyRequest
 	var metadata runtime.ServerMetadata
 
 	newReader, berr := utilities.IOReaderFactory(req.Body)
