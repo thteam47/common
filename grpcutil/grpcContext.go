@@ -1,6 +1,6 @@
 package grpcauth
 
-import "github.com/thteam47/go-survey-api/pkg/models"
+import "github.com/thteam47/common/entity"
 
 type UserContext interface {
 	GetUserId() string
@@ -10,15 +10,15 @@ type UserContext interface {
 	IsAuthenDone() bool
 	SetAccessToken(token string)
 	GetAccessToken() string
-	GetTokenInfo() *models.TokenInfo
+	GetTokenInfo() *entity.TokenInfo
 }
 
 type UserContextImpl struct {
-	TokenInfo   *models.TokenInfo
+	TokenInfo   *entity.TokenInfo
 	accessToken string
 }
 
-func NewUserContext(tokenInfo *models.TokenInfo) UserContext {
+func NewUserContext(tokenInfo *entity.TokenInfo) UserContext {
 	return &UserContextImpl{
 		TokenInfo: tokenInfo,
 	}
@@ -28,7 +28,7 @@ func (inst *UserContextImpl) GetUserId() string {
 	return inst.TokenInfo.UserId
 }
 
-func (inst *UserContextImpl) GetTokenInfo() *models.TokenInfo {
+func (inst *UserContextImpl) GetTokenInfo() *entity.TokenInfo {
 	return inst.TokenInfo
 }
 
