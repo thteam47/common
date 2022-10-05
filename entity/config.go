@@ -2,7 +2,6 @@ package entity
 
 import (
 	"io/ioutil"
-	"path/filepath"
 	"time"
 
 	"github.com/pkg/errors"
@@ -47,11 +46,7 @@ func String(payload interface{}) string {
 	}
 	return load
 }
-func LoadConfig() (*Config, error) {
-	filename, err := filepath.Abs("../pkg/configs/config.yaml")
-	if err != nil {
-		return nil, errors.WithMessage(err, "filepath.Abs")
-	}
+func LoadConfig(filename string) (*Config, error) {
 	yamlFile, err := ioutil.ReadFile(filename)
 
 	if err != nil {
