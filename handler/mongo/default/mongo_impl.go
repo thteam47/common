@@ -63,7 +63,7 @@ func (inst *MongoRepositoryImpl) GetOneByAttr(data map[string]string, result int
 		"$or": findquery,
 	}
 
-	err := inst.mongoDB.FindOne(context.Background(), filters).Decode(&result)
+	err := inst.mongoDB.FindOne(context.Background(), filters).Decode(result)
 	if err != nil {
 		return errutil.Wrap(err, "MongoDB.FindOne")
 	}

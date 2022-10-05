@@ -23,10 +23,11 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type SurveyServiceClient interface {
 	CreateSurvey(ctx context.Context, in *SurveyRequest, opts ...grpc.CallOption) (*Survey, error)
-	UpdateSurvey(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*Survey, error)
+	UpdateSurveyById(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*StringResponse, error)
 	GetSurveyById(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*Survey, error)
 	GetSurveyByUserJoin(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
+	DeleteSurveyById(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*StringResponse, error)
 }
 
 type surveyServiceClient struct {
@@ -46,9 +47,9 @@ func (c *surveyServiceClient) CreateSurvey(ctx context.Context, in *SurveyReques
 	return out, nil
 }
 
-func (c *surveyServiceClient) UpdateSurvey(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*Survey, error) {
-	out := new(Survey)
-	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/UpdateSurvey", in, out, opts...)
+func (c *surveyServiceClient) UpdateSurveyById(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*StringResponse, error) {
+	out := new(StringResponse)
+	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/UpdateSurveyById", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -82,15 +83,25 @@ func (c *surveyServiceClient) GetSurveyByUserCreate(ctx context.Context, in *Str
 	return out, nil
 }
 
+func (c *surveyServiceClient) DeleteSurveyById(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*StringResponse, error) {
+	out := new(StringResponse)
+	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/DeleteSurveyById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // SurveyServiceServer is the server API for SurveyService service.
 // All implementations must embed UnimplementedSurveyServiceServer
 // for forward compatibility
 type SurveyServiceServer interface {
 	CreateSurvey(context.Context, *SurveyRequest) (*Survey, error)
-	UpdateSurvey(context.Context, *UpdateSurveyRequest) (*Survey, error)
+	UpdateSurveyById(context.Context, *UpdateSurveyRequest) (*StringResponse, error)
 	GetSurveyById(context.Context, *StringRequest) (*Survey, error)
 	GetSurveyByUserJoin(context.Context, *StringRequest) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(context.Context, *StringRequest) (*ListSurveyResponse, error)
+	DeleteSurveyById(context.Context, *StringRequest) (*StringResponse, error)
 	mustEmbedUnimplementedSurveyServiceServer()
 }
 
@@ -101,8 +112,8 @@ type UnimplementedSurveyServiceServer struct {
 func (UnimplementedSurveyServiceServer) CreateSurvey(context.Context, *SurveyRequest) (*Survey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateSurvey not implemented")
 }
-func (UnimplementedSurveyServiceServer) UpdateSurvey(context.Context, *UpdateSurveyRequest) (*Survey, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateSurvey not implemented")
+func (UnimplementedSurveyServiceServer) UpdateSurveyById(context.Context, *UpdateSurveyRequest) (*StringResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateSurveyById not implemented")
 }
 func (UnimplementedSurveyServiceServer) GetSurveyById(context.Context, *StringRequest) (*Survey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSurveyById not implemented")
@@ -112,6 +123,9 @@ func (UnimplementedSurveyServiceServer) GetSurveyByUserJoin(context.Context, *St
 }
 func (UnimplementedSurveyServiceServer) GetSurveyByUserCreate(context.Context, *StringRequest) (*ListSurveyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSurveyByUserCreate not implemented")
+}
+func (UnimplementedSurveyServiceServer) DeleteSurveyById(context.Context, *StringRequest) (*StringResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteSurveyById not implemented")
 }
 func (UnimplementedSurveyServiceServer) mustEmbedUnimplementedSurveyServiceServer() {}
 
@@ -144,20 +158,20 @@ func _SurveyService_CreateSurvey_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _SurveyService_UpdateSurvey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _SurveyService_UpdateSurveyById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateSurveyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(SurveyServiceServer).UpdateSurvey(ctx, in)
+		return srv.(SurveyServiceServer).UpdateSurveyById(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/survey_api.SurveyService/UpdateSurvey",
+		FullMethod: "/survey_api.SurveyService/UpdateSurveyById",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(SurveyServiceServer).UpdateSurvey(ctx, req.(*UpdateSurveyRequest))
+		return srv.(SurveyServiceServer).UpdateSurveyById(ctx, req.(*UpdateSurveyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -216,6 +230,24 @@ func _SurveyService_GetSurveyByUserCreate_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _SurveyService_DeleteSurveyById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StringRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SurveyServiceServer).DeleteSurveyById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/survey_api.SurveyService/DeleteSurveyById",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SurveyServiceServer).DeleteSurveyById(ctx, req.(*StringRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // SurveyService_ServiceDesc is the grpc.ServiceDesc for SurveyService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -228,8 +260,8 @@ var SurveyService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _SurveyService_CreateSurvey_Handler,
 		},
 		{
-			MethodName: "UpdateSurvey",
-			Handler:    _SurveyService_UpdateSurvey_Handler,
+			MethodName: "UpdateSurveyById",
+			Handler:    _SurveyService_UpdateSurveyById_Handler,
 		},
 		{
 			MethodName: "GetSurveyById",
@@ -242,6 +274,10 @@ var SurveyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSurveyByUserCreate",
 			Handler:    _SurveyService_GetSurveyByUserCreate_Handler,
+		},
+		{
+			MethodName: "DeleteSurveyById",
+			Handler:    _SurveyService_DeleteSurveyById_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
