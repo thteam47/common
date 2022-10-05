@@ -48,7 +48,6 @@ func String(payload interface{}) string {
 }
 func LoadConfig(filename string) (*Config, error) {
 	yamlFile, err := ioutil.ReadFile(filename)
-
 	if err != nil {
 		return nil, errors.WithMessage(err, "ioutil.ReadFile")
 	}

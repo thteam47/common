@@ -2,6 +2,7 @@ package mongoImpl
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"github.com/thteam47/common-libs/errutil"
@@ -62,8 +63,10 @@ func (inst *MongoRepositoryImpl) GetOneByAttr(data map[string]string, result int
 	filters := bson.M{
 		"$or": findquery,
 	}
+	fmt.Println(data)
 
 	err := inst.mongoDB.FindOne(context.Background(), filters).Decode(result)
+	fmt.Println(result)
 	if err != nil {
 		return errutil.Wrap(err, "MongoDB.FindOne")
 	}
