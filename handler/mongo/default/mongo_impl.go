@@ -108,7 +108,7 @@ func (inst *MongoRepositoryImpl) UpdateOneByAttr(id string, data map[string]inte
 	idPri, _ := primitive.ObjectIDFromHex(id)
 
 	fmt.Println("ok")
-	
+
 	filterSurvey := bson.M{"_id": idPri}
 	dataUpdate := bson.M{}
 	for _, key := range util.Keys[string, interface{}](data) {
