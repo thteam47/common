@@ -27,6 +27,7 @@ func (interceptor *AuthInterceptor) Authentication(ctx context.Context, ctxReque
 	if !ok {
 		return nil, status.Errorf(codes.Unauthenticated, "metadata is not provided")
 	}
+	fmt.Println("dsgsagsag")
 
 	accessToken := ""
 	authorization := md["authorization"]
