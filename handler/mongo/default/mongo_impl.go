@@ -39,6 +39,7 @@ func (inst *MongoRepositoryImpl) GetOneByAttr(data map[string]string, result int
 	if data == nil {
 		return nil
 	}
+	
 	findquery := []bson.M{}
 	for _, key := range util.Keys[string, string](data) {
 		value := ""
