@@ -45,7 +45,7 @@ func (interceptor *AuthInterceptor) Authentication(ctx context.Context, ctxReque
 	}
 
 	err := interceptor.handler.RedisRepository.GetValueCache(fmt.Sprintf("invalid-token-%s", accessToken), nil)
-	if err != nil {
+	if err == nil {
 		return nil, status.Errorf(codes.Unauthenticated, "Token is expired")
 	}
 
