@@ -103,6 +103,24 @@ func (inst *MongoRepositoryImpl) DeleteById(id string) error {
 	return nil
 }
 
+func (inst *MongoRepositoryImpl) UpdateOneByAttr(userId string, data map[string]interface{}) error {
+	filterUser := bson.M{"user_id": userId}
+	dataUpdate := bson.M{}
+	for _, key := range util.Keys[string, interface{}](data) {
+		if value, ok := data[key]; ok {
+			dataUpdate[key] = value
+		}
+	}
+	opts := options.Update().SetUpsert(true)
+
+	updateUser := bson.M{"$set": dataUpdate}
+	_, err :=inst.mongoDB.UpdateOne(context.Background(), filterUser, updateUser, opts)
+	if err != nil {
+		return errutil.Wrapf(err, "MongoDB.UpdateOne")
+	}
+	return nil
+}
+
 func (inst *MongoRepositoryImpl) Find(filter interface{}, options *options.FindOptions) (*mongo.Cursor, error) {
 	cur, err := inst.mongoDB.Find(context.Background(), filter, options)
 	if err != nil {
