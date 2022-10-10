@@ -39,7 +39,7 @@ func (inst *MongoRepositoryImpl) GetOneByAttr(data map[string]string, result int
 	if data == nil {
 		return nil
 	}
-	
+
 	findquery := []bson.M{}
 	for _, key := range util.Keys[string, string](data) {
 		value := ""
@@ -104,8 +104,11 @@ func (inst *MongoRepositoryImpl) DeleteById(id string) error {
 	return nil
 }
 
-func (inst *MongoRepositoryImpl) UpdateOneByAttr(userId string, data map[string]interface{}) error {
-	filterUser := bson.M{"user_id": userId}
+func (inst *MongoRepositoryImpl) UpdateOneByAttr(id string, data map[string]interface{}) error {
+	idPri, _ := primitive.ObjectIDFromHex(id)
+
+	fmt.Println("ok")
+	filterSurvey := bson.M{"_id": idPri}
 	dataUpdate := bson.M{}
 	for _, key := range util.Keys[string, interface{}](data) {
 		if value, ok := data[key]; ok {
@@ -115,7 +118,7 @@ func (inst *MongoRepositoryImpl) UpdateOneByAttr(userId string, data map[string]
 	opts := options.Update().SetUpsert(true)
 
 	updateUser := bson.M{"$set": dataUpdate}
-	_, err :=inst.mongoDB.UpdateOne(context.Background(), filterUser, updateUser, opts)
+	_, err := inst.mongoDB.UpdateOne(context.Background(), filterSurvey, updateUser, opts)
 	if err != nil {
 		return errutil.Wrapf(err, "MongoDB.UpdateOne")
 	}
