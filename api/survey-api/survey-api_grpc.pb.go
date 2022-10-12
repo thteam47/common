@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type SurveyServiceClient interface {
 	CreateSurvey(ctx context.Context, in *SurveyRequest, opts ...grpc.CallOption) (*Survey, error)
 	UpdateSurveyById(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*StringResponse, error)
+	GetAll(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
 	GetSurveyById(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*Survey, error)
 	GetSurveyByUserJoin(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(ctx context.Context, in *StringRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error)
@@ -51,6 +52,15 @@ func (c *surveyServiceClient) CreateSurvey(ctx context.Context, in *SurveyReques
 func (c *surveyServiceClient) UpdateSurveyById(ctx context.Context, in *UpdateSurveyRequest, opts ...grpc.CallOption) (*StringResponse, error) {
 	out := new(StringResponse)
 	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/UpdateSurveyById", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *surveyServiceClient) GetAll(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListSurveyResponse, error) {
+	out := new(ListSurveyResponse)
+	err := c.cc.Invoke(ctx, "/survey_api.SurveyService/GetAll", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -108,6 +118,7 @@ func (c *surveyServiceClient) DeleteSurveyById(ctx context.Context, in *StringRe
 type SurveyServiceServer interface {
 	CreateSurvey(context.Context, *SurveyRequest) (*Survey, error)
 	UpdateSurveyById(context.Context, *UpdateSurveyRequest) (*StringResponse, error)
+	GetAll(context.Context, *ListRequest) (*ListSurveyResponse, error)
 	GetSurveyById(context.Context, *StringRequest) (*Survey, error)
 	GetSurveyByUserJoin(context.Context, *StringRequest) (*ListSurveyResponse, error)
 	GetSurveyByUserCreate(context.Context, *StringRequest) (*ListSurveyResponse, error)
@@ -125,6 +136,9 @@ func (UnimplementedSurveyServiceServer) CreateSurvey(context.Context, *SurveyReq
 }
 func (UnimplementedSurveyServiceServer) UpdateSurveyById(context.Context, *UpdateSurveyRequest) (*StringResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateSurveyById not implemented")
+}
+func (UnimplementedSurveyServiceServer) GetAll(context.Context, *ListRequest) (*ListSurveyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAll not implemented")
 }
 func (UnimplementedSurveyServiceServer) GetSurveyById(context.Context, *StringRequest) (*Survey, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetSurveyById not implemented")
@@ -186,6 +200,24 @@ func _SurveyService_UpdateSurveyById_Handler(srv interface{}, ctx context.Contex
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(SurveyServiceServer).UpdateSurveyById(ctx, req.(*UpdateSurveyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _SurveyService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(SurveyServiceServer).GetAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/survey_api.SurveyService/GetAll",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(SurveyServiceServer).GetAll(ctx, req.(*ListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -294,6 +326,10 @@ var SurveyService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateSurveyById",
 			Handler:    _SurveyService_UpdateSurveyById_Handler,
+		},
+		{
+			MethodName: "GetAll",
+			Handler:    _SurveyService_GetAll_Handler,
 		},
 		{
 			MethodName: "GetSurveyById",
